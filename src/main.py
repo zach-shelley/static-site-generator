@@ -2,9 +2,11 @@ from textnode import TextNode
 from block_conv import markdown_to_htmlnode, markdown_to_blocks
 from htmlnode import HTMLNode
 import os
+import sys
 import shutil
 from pathlib import Path
 
+basepath = sys.argv[1] if len(sys.argv) > 1 else "/"
 
 def transfer_files(source_path, dest_path):
     if os.path.exists(dest_path):
@@ -46,7 +48,9 @@ def generate_page(from_path, template_path, dest_path):
     html_string = html_node.to_html()
     website_title = extract_title(contents)
     adding_title = template_contents.replace("{{ Title }}", website_title)
-    final_html = adding_title.replace("{{ Content }}", html_string)
+    title_added_html = adding_title.replace("{{ Content }}", html_string)
+    replace_href = title_added_html.replace('href="/', f'href="{basepath}')
+    final_html = replace_href.replace('src="/', f'src="{basepath}')
 
     dir_name = os.path.dirname(dest_path)
     if dir_name and not os.path.exists(dir_name):
@@ -74,7 +78,7 @@ def main():
     # test_node = TextNode("Test text", "text")
     # print(repr(test_node))
 
-    transfer_files("static/", "public/")
-    generate_pages_recursive("content/", "template.html", "public/")
+    transfer_files("static/", "docs/")
+    generate_pages_recursive("content/", "template.html", "docs/")
 
 main()
