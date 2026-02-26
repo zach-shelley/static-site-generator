@@ -59,11 +59,12 @@ def markdown_to_htmlnode(markdown):
                     break
                 count += 1
             node_text = b.split(f"{'#' * count}")
-            child_nodes = text_to_textnodes(node_text[1])
+            child_nodes = text_to_textnodes(node_text[1].strip())
             html_child_nodes = [text_node_to_html_node(node) for node in child_nodes]
             html_list.append(ParentNode(tag=f"h{count}", children=html_child_nodes))
         elif blocktype == BlockType.QUOTE:
-            cleaned_quote = b.replace(">", "")
+            lines = b.split("\n")
+            cleaned_quote = " ".join(line.lstrip(">").strip() for line in lines)
             text_nodes = text_to_textnodes(cleaned_quote)
             html_children = [text_node_to_html_node(node) for node in text_nodes]
             html_list.append(ParentNode(tag="blockquote", children=html_children))

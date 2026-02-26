@@ -22,7 +22,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
         for i, el in enumerate(split_elements):
             if i % 2 != 0:
                 new_nodes.append(TextNode(el, text_type))
-            else:
+            elif el:
                 new_nodes.append(TextNode(el, "text"))
 
     return new_nodes
